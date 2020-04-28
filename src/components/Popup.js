@@ -4,7 +4,7 @@ export default function Popup({selected, closePopup}) {
   useEffect(() => {
     document.body.style.overflow = 'hidden'
   }, [])
-  
+
   return (
     <section className="popup pt-5">
       <div className="content">
@@ -13,11 +13,19 @@ export default function Popup({selected, closePopup}) {
         </h2>
         <p className="rating">Rating: {selected.imdbRating}</p>
         <div className="plot">
-          <img
-            src={selected.Poster}
-            alt={selected.Title}
-            style={{maxHeight: '444px'}}
-          />
+          {selected.Poster === 'N/A' ? (
+            <img
+              src="https://via.placeholder.com/286x444"
+              alt={selected.Title}
+              style={{maxHeight: '444px'}}
+            />
+          ) : (
+            <img
+              src={selected.Poster}
+              alt={selected.Title}
+              style={{maxHeight: '444px'}}
+            />
+          )}
           <ul
             className="list-group list-group-flush pt-0"
             style={{color: 'black'}}

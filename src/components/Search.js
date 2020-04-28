@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Search({handleInput, search}) {
+export default function Search({handleInput, search, setYear}) {
   let years = []
   const setYears = () => {
     for (let i = 2020; i >= 1940; i--) {
@@ -8,6 +8,9 @@ export default function Search({handleInput, search}) {
     }
   }
   setYears()
+  const selectHandler = (e) => {
+    e.target.value !== 'Год' ? setYear(e.target.value) : setYear(null)
+  }
 
   return (
     <section className="mt-3">
@@ -24,7 +27,7 @@ export default function Search({handleInput, search}) {
         </div>
         <div className="col-4">
           <label className="ml-1">Год:</label>
-          <select className="custom-select">
+          <select onChange={selectHandler} className="custom-select">
             <option>Год</option>
             {years.map((year) => (
               <option key={year} value={year}>

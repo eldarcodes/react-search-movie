@@ -15,6 +15,7 @@ function App() {
     isFetching: false,
     error: '',
     currentPage: 1,
+    year: null,
   })
   const apiUrl = 'http://www.omdbapi.com/?apikey=e72ef182'
 
@@ -28,6 +29,13 @@ function App() {
     pages.push(i)
   }
 
+  const setYear = (year) => {
+    setState((prevState) => ({
+      ...prevState,
+      year,
+    }))
+  }
+
   const changePage = (page) => {
     setState((prevState) => ({
       ...prevState,
@@ -35,19 +43,17 @@ function App() {
       isFetching: true,
     }))
 
-    Axios(apiUrl + `&s=${state.searchValue}&page=${+page}`).then(
-      ({data}) => {
-        setState((prevState) => ({
-          ...prevState,
-          isFetching: false,
-        }))
+    Axios(apiUrl + `&s=${state.searchValue}&page=${+page}`).then(({data}) => {
+      setState((prevState) => ({
+        ...prevState,
+        isFetching: false,
+      }))
 
-        setState((prevState) => ({
-          ...prevState,
-          result: data.Search,
-        }))
-      }
-    )
+      setState((prevState) => ({
+        ...prevState,
+        result: data.Search,
+      }))
+    })
   }
 
   useEffect(() => {
@@ -70,9 +76,12 @@ function App() {
       setState((prevState) => ({
         ...prevState,
         isFetching: true,
-        currentPage: 1
+        currentPage: 1,
       }))
-      Axios(apiUrl + '&s=' + state.searchValue).then(({data}) => {
+      Axios(
+        apiUrl +
+          `&s=${state.searchValue}${state.year !== null ? `&y=${state.year}` : ''}`
+      ).then(({data}) => {
         setState((prevState) => ({
           ...prevState,
           isFetching: false,
@@ -127,12 +136,14 @@ function App() {
           <h1>Фильмы</h1>
         </header>
         <main>
-          <Search handleInput={handleInput} search={search} />
-          <Pagination
-            currentPage={state.currentPage}
-            pages={pages}
-            changePage={changePage}
-          />
+          <Search setYear={setYear} handleInput={handleInput} search={search} />
+          {state.totalResults > 10 && (
+            <Pagination
+              currentPage={state.currentPage}
+              pages={pages}
+              changePage={changePage}
+            />
+          )}
           {state.isFetching ? (
             <Loader />
           ) : (

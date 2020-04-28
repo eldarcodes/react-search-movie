@@ -1,0 +1,87 @@
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+
+    overflow-y: scroll;
+}
+
+.popup .content {
+    border-radius: 7px;
+    display: block;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 25px;
+    background-color: #95a5a6;
+    color: #fff;
+}
+
+.popup .content h2 {
+    font-size: 28px;
+    font-weight: 600;
+}
+.popup .content h2 span {
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.popup .content .rating {
+    margin-bottom: 30px;
+}
+
+.popup .content .plot {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px -15px 30px;
+}
+
+.popup .content .plot img {
+    flex: 1 1 50%;
+    max-width: 300px;
+    padding: 0px 15px;
+}
+
+.popup .content .plot ul {
+    flex: 1 1 50%;
+    padding: 15px;
+}
+
+.popup .content .close {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 700;
+
+    background: #4484c4;
+    color: #fff;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    appearance: none;
+    cursor: pointer;
+
+    transition: 0.4s ease-out;
+}
+
+.popup .content .close:hover {
+    background: #223343;
+}
+
+.card:hover {
+    .card-body {
+        transition: all 0.15s linear;
+        background-color: #4b7bec;
+        color: white;
+    }
+}
+
+@media (max-width: 767px) {
+    .results {
+        justify-content: center !important;
+    }
+}

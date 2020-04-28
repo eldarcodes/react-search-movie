@@ -3,22 +3,55 @@ import Search from './components/Search'
 import Axios from 'axios'
 import Results from './components/Results'
 import Popup from './components/Popup'
+import Pagination from './components/common/Pagination'
+import Loader from './components/common/Loader'
 
 function App() {
   const [state, setState] = useState({
-    searchValue: '',
+    searchValue: 'martian',
     result: [],
     selected: {},
     totalResults: '',
     isFetching: false,
     error: '',
+    currentPage: 1,
   })
-  window.state = state
-
   const apiUrl = 'http://www.omdbapi.com/?apikey=e72ef182'
 
+  window.state = state
+
+  let pagesCount = Math.ceil(state.totalResults / 10)
+
+  let pages = []
+
+  for (let i = 1; i <= pagesCount; i++) {
+    pages.push(i)
+  }
+
+  const changePage = (page) => {
+    setState((prevState) => ({
+      ...prevState,
+      currentPage: page,
+      isFetching: true,
+    }))
+
+    Axios(apiUrl + `&s=${state.searchValue}&page=${+page}`).then(
+      ({data}) => {
+        setState((prevState) => ({
+          ...prevState,
+          isFetching: false,
+        }))
+
+        setState((prevState) => ({
+          ...prevState,
+          result: data.Search,
+        }))
+      }
+    )
+  }
+
   useEffect(() => {
-    Axios(apiUrl + '&s=martian').then(({data}) => {
+    Axios(apiUrl + '&s=martian&page="1"').then(({data}) => {
       setState((prevState) => ({
         ...prevState,
         isFetching: false,
@@ -37,6 +70,7 @@ function App() {
       setState((prevState) => ({
         ...prevState,
         isFetching: true,
+        currentPage: 1
       }))
       Axios(apiUrl + '&s=' + state.searchValue).then(({data}) => {
         setState((prevState) => ({
@@ -94,16 +128,13 @@ function App() {
         </header>
         <main>
           <Search handleInput={handleInput} search={search} />
+          <Pagination
+            currentPage={state.currentPage}
+            pages={pages}
+            changePage={changePage}
+          />
           {state.isFetching ? (
-            <div className="text-center">
-              <div
-                className="spinner-grow"
-                style={{width: '80px', height: '80px', marginTop: '200px'}}
-                role="status"
-              >
-                <span className="sr-only">Loading...</span>
-              </div>
-            </div>
+            <Loader />
           ) : (
             <Results
               results={state.result}

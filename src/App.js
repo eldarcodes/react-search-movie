@@ -17,6 +17,7 @@ function App() {
     currentPage: 1,
     year: null,
   })
+
   const apiUrl = 'http://www.omdbapi.com/?apikey=e72ef182'
 
   window.state = state
@@ -37,23 +38,30 @@ function App() {
   }
 
   const changePage = (page) => {
-    setState((prevState) => ({
-      ...prevState,
-      currentPage: page,
-      isFetching: true,
-    }))
-
-    Axios(apiUrl + `&s=${state.searchValue}&page=${+page}`).then(({data}) => {
+    if (state.currentPage !== page) {
       setState((prevState) => ({
         ...prevState,
-        isFetching: false,
+        currentPage: page,
+        isFetching: true,
       }))
 
-      setState((prevState) => ({
-        ...prevState,
-        result: data.Search,
-      }))
-    })
+      Axios(
+        apiUrl +
+          `&s=${state.searchValue}&page=${+page}${
+            state.year !== null ? `&y=${state.year}` : ''
+          }`
+      ).then(({data}) => {
+        setState((prevState) => ({
+          ...prevState,
+          isFetching: false,
+        }))
+
+        setState((prevState) => ({
+          ...prevState,
+          result: data.Search,
+        }))
+      })
+    }
   }
 
   useEffect(() => {
@@ -72,7 +80,7 @@ function App() {
   }, [])
 
   const search = (e) => {
-    if ((e.key === 'Enter' || e.type === 'click') && state.searchValue) {
+    if ((e.key === 'Enter' || e.type === 'click') && state.searchValue ) {
       setState((prevState) => ({
         ...prevState,
         isFetching: true,
@@ -80,7 +88,9 @@ function App() {
       }))
       Axios(
         apiUrl +
-          `&s=${state.searchValue}${state.year !== null ? `&y=${state.year}` : ''}`
+          `&s=${state.searchValue}${
+            state.year !== null ? `&y=${state.year}` : ''
+          }`
       ).then(({data}) => {
         setState((prevState) => ({
           ...prevState,

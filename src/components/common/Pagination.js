@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Pagination({currentPage, pages, changePage}) {
   if (pages.length > 15) {
-    pages.splice(15)
+    pages.splice(16)
   }
 
   return (
